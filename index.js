@@ -5,8 +5,13 @@ const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
 const https = require('https');
 
+const instance = axios.create({
+    withCredentials: true,
+    httpsAgent: new https.Agent({ rejectUnauthorized: false, requestCert: true, keepAlive: true })
+});
+
 axiosCookieJarSupport(axios);
-const cookieJar = new tough.CookieJar();
+instance.defaults.jar = new tough.CookieJar();
 
 const wait = function (seconds) {
     return new Promise((resolve, reject) => {
@@ -30,12 +35,6 @@ async function run() {
     try {
         core.info(`Waiting ${sleepDuration} seconds ...`);
         await wait(parseInt(sleepDuration));
-
-        const instance = axios.create({
-            jar: cookieJar,
-            withCredentials: true,
-            httpsAgent: new https.Agent({ rejectUnauthorized: false, requestCert: true, keepAlive: true })
-        });
 
         core.info(`Getting CSRF Token to interact with Jenkins...`);
         const csrfResult = await instance.get(`${jenkinsHost}/crumbIssuer/api/json`, {
