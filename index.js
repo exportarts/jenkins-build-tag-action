@@ -46,7 +46,7 @@ async function run() {
         crumbRequestField = csrfResult.data.crumbRequestField;
 
         core.info(`Triggering the job`);
-        await instance.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, {
+        await instance.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, null, {
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`,
                 [crumbRequestField]: crumb
