@@ -1,0 +1,32 @@
+{
+  "name": "jenkins-build-tag-action",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exportarts/jenkins-build-tag-action.git"
+  },
+  "author": {
+    "name": "Enzo Volkmann",
+    "email": "enzo@exportarts.io"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/exportarts/jenkins-build-tag-action/issues"
+  },
+  "homepage": "https://github.com/exportarts/jenkins-build-tag-action#readme",
+  "dependencies": {
+    "@actions/core": "1.2.3",
+    "@actions/github": "2.1.1",
+    "axios": "0.19.2",
+    "axios-cookiejar-support": "1.0.0",
+    "tough-cookie": "4.0.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "0.22.1"
+  }
+}

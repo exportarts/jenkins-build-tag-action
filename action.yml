@@ -1,0 +1,19 @@
+name: 'Jenkins Build Tag'
+description: 'Trigger a tag-based build in your Jenkins instance'
+inputs:
+  jenkins_host:
+    description: 'Hostname of your jenkins instance (ex: https://jenkins.example.com)'
+    required: true
+  jenkins_basic_auth_token:
+    description: 'A token to authenticate with Jenkins'
+    required: true
+  jenkins_job:
+    description: 'The job for which you want to build a tag'
+    required: true
+  sleep_duration:
+    description: 'Seconds to wait before triggering the build. Usually Jenkins needs a bit of time to receive the new tag via GitHub webhook.'
+    required: true
+    default: '60'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
