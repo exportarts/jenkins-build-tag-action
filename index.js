@@ -3,15 +3,9 @@ const github = require('@actions/github');
 const axios = require('axios').default;
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const tough = require('tough-cookie');
-const https = require('https');
-
-const instance = axios.create({
-    withCredentials: true,
-    httpsAgent: new https.Agent({ rejectUnauthorized: false, requestCert: true, keepAlive: true })
-});
 
 axiosCookieJarSupport(axios);
-instance.defaults.jar = new tough.CookieJar();
+const cookieJar = new tough.CookieJar();
 
 const wait = function (seconds) {
     return new Promise((resolve, reject) => {
@@ -37,7 +31,9 @@ async function run() {
         await wait(parseInt(sleepDuration));
 
         core.info(`Getting CSRF Token to interact with Jenkins...`);
-        const csrfResult = await instance.get(`${jenkinsHost}/crumbIssuer/api/json`, {
+        const csrfResult = await axios.get(`${jenkinsHost}/crumbIssuer/api/json`, {
+            jar: cookieJar,
+            withCredentials: true,
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`
             }
@@ -46,7 +42,9 @@ async function run() {
         crumbRequestField = csrfResult.data.crumbRequestField;
 
         core.info(`Triggering the job`);
-        await instance.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, null, {
+        await axios.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, null, {
+            jar: cookieJar,
+            withCredentials: true,
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`,
                 [crumbRequestField]: crumb
