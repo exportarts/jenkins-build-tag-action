@@ -1410,13 +1410,15 @@ const wait = function (seconds) {
 }
 
 async function run() {
+    const tag = github.context.ref.replace('refs/tags/', '');
+    const jenkinsHost = core.getInput('jenkins_host');
+    const jenkinsBasicAuthToken = core.getInput('jenkins_basic_auth_token');
+    const jenkinsJob = core.getInput('jenkins_job');
+    const sleepDuration = core.getInput('sleep_duration');
+    let crumb;
+    let crumbRequestField;
+    
     try {
-        const tag = github.context.ref.replace('refs/tags/', '');
-        const jenkinsHost = core.getInput('jenkins_host');
-        const jenkinsBasicAuthToken = core.getInput('jenkins_basic_auth_token');
-        const jenkinsJob = core.getInput('jenkins_job');
-        const sleepDuration = core.getInput('sleep_duration');
-        
         core.info(`Waiting ${sleepDuration} seconds ...`);
         await wait(parseInt(sleepDuration));
 
@@ -1432,7 +1434,8 @@ async function run() {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`
             }
         });
-        const { crumb, crumbRequestField } = csrfResult.data;
+        crumb = csrfResult.data.crumb;
+        crumbRequestField = csrfResult.data.crumbRequestField;
 
         core.info(`Triggering the job`);
         await instance.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, {
