@@ -1394,6 +1394,7 @@ const github = __webpack_require__(469);
 const axios = __webpack_require__(53).default;
 const axiosCookieJarSupport = __webpack_require__(264).default;
 const tough = __webpack_require__(701);
+const https = __webpack_require__(34);
 
 axiosCookieJarSupport(axios);
 const cookieJar = new tough.CookieJar();
