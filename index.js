@@ -28,31 +28,39 @@ async function run() {
         core.info(`Waiting ${sleepDuration} seconds ...`);
         await wait(parseInt(sleepDuration));
 
+        const instance = axios.create({
+            jar: cookieJar,
+            withCredentials: true,
+            httpsAgent: new https.Agent({ rejectUnauthorized: false, requestCert: true, keepAlive: true })
+        });
+
         core.info(`Getting CSRF Token to interact with Jenkins...`);
-        const csrfResult = await axios.get(`${jenkinsHost}/crumbIssuer/api/json`, {
+        const csrfResult = await instance.get(`${jenkinsHost}/crumbIssuer/api/json`, {
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`
-            },
-            withCredentials: true,
-            jar: cookieJar
+            }
         });
         const { crumb, crumbRequestField } = csrfResult.data;
-        core.info(`Crumb: ${crumb}`);
-        core.info(`CrumbRequestField: ${crumbRequestField}`);
 
         core.info(`Triggering the job`);
-        await axios.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, {
+        await instance.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, {
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`,
                 [crumbRequestField]: crumb
-            },
-            withCredentials: true,
-            jar: cookieJar
+            }
         });
 
         core.info(`Done!`);
     } catch (error) {
         core.setFailed(error.message);
+        core.debug(`The following values may help you debugging.`);
+        core.debug(`tag: ${tag}`);
+        core.debug(`jenkins_host: ${jenkinsHost}`);
+        core.debug(`jenkins_basic_auth_token: ${jenkinsBasicAuthToken}`);
+        core.debug(`jenkins_job: ${jenkinsJob}`);
+        core.debug(`sleep_duration: ${sleepDuration}`);
+        core.debug(`crumb: ${crumb}`);
+        core.debug(`crumbRequestField: ${crumbRequestField}`);
         core.error(JSON.stringify(error))
     }
 }
