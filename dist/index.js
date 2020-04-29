@@ -1420,13 +1420,16 @@ async function run() {
         await wait(parseInt(sleepDuration));
 
         core.info(`Getting CSRF Token to interact with Jenkins...`);
-        const { crumb, crumbRequestField } = await axios.get(`${jenkinsHost}/crumbIssuer/api/json`, {
+        const csrfResult = await axios.get(`${jenkinsHost}/crumbIssuer/api/json`, {
             headers: {
                 Authorization: `Basic ${jenkinsBasicAuthToken}`
             },
             withCredentials: true,
             jar: cookieJar
         });
+        const { crumb, crumbRequestField } = csrfResult.data;
+        core.info(`Crumb: ${crumb}`);
+        core.info(`CrumbRequestField: ${crumbRequestField}`);
 
         core.info(`Triggering the job`);
         await axios.post(`${jenkinsHost}/job/${jenkinsJob}/view/tags/job/${tag}/build?build?delay=0sec`, {
@@ -1441,6 +1444,7 @@ async function run() {
         core.info(`Done!`);
     } catch (error) {
         core.setFailed(error.message);
+        core.error(JSON.stringify(error))
     }
 }
 
