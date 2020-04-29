@@ -1,5 +1,8 @@
 name: 'Jenkins Build Tag'
 description: 'Trigger a tag-based build in your Jenkins instance'
+branding:
+  icon: 'tag'
+  color: 'red'
 inputs:
   jenkins_host:
     description: 'Hostname of your jenkins instance (ex: https://jenkins.example.com)'
