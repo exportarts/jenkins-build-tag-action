@@ -22,7 +22,7 @@
   "dependencies": {
     "@actions/core": "1.2.3",
     "@actions/github": "2.1.1",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "axios-cookiejar-support": "1.0.0",
     "tough-cookie": "4.0.0"
   },
