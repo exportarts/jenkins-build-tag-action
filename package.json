@@ -1,6 +1,6 @@
 {
   "name": "jenkins-build-tag-action",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Trigger a tag-based build in your Jenkins instance",
   "main": "index.js",
   "scripts": {
