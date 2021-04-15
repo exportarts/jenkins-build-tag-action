@@ -8,7 +8,7 @@ inputs:
     description: 'Hostname of your jenkins instance (ex: https://jenkins.example.com)'
     required: true
   jenkins_basic_auth_token:
-    description: 'A token to authenticate with Jenkins'
+    description: 'A token to authenticate with Jenkins. Will be used in the Authorization header like `Basic ${jenkinsBasicAuthToken}`'
     required: true
   jenkins_job:
     description: 'The job for which you want to build a tag'
