@@ -23,9 +23,10 @@ async function run() {
     const jenkinsBasicAuthToken = core.getInput('jenkins_basic_auth_token');
     const jenkinsJob = core.getInput('jenkins_job');
     const sleepDuration = core.getInput('sleep_duration');
+    const authHeader = jenkinsBasicAuthToken.startsWith('Basic ') ? jenkinsBasicAuthToken : `Basic ${jenkinsBasicAuthToken}`;
     let crumb;
     let crumbRequestField;
-    
+
     try {
         core.info(`Waiting ${sleepDuration} seconds ...`);
         await wait(parseInt(sleepDuration));
@@ -35,7 +36,7 @@ async function run() {
             jar: cookieJar,
             withCredentials: true,
             headers: {
-                Authorization: `Basic ${jenkinsBasicAuthToken}`
+                Authorization: authHeader
             }
         });
         crumb = csrfResult.data.crumb;
@@ -46,7 +47,7 @@ async function run() {
             jar: cookieJar,
             withCredentials: true,
             headers: {
-                Authorization: `Basic ${jenkinsBasicAuthToken}`,
+                Authorization: authHeader,
                 [crumbRequestField]: crumb
             }
         });
