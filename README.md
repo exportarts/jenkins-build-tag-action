@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Trigger Tag Build
-      uses: exportarts/jenkins-build-tag-action@1.0.2
+      uses: exportarts/jenkins-build-tag-action@1.0.3
       with:
         jenkins_host: https://my.jenkins.io
         jenkins_basic_auth_token: ${{secrets.JENKINS_BASIC_AUTH_TOKEN}}
