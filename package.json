@@ -21,7 +21,7 @@
   "homepage": "https://github.com/exportarts/jenkins-build-tag-action#readme",
   "dependencies": {
     "@actions/core": "1.2.6",
-    "@actions/github": "2.1.1",
+    "@actions/github": "5.1.1",
     "axios": "0.21.2",
     "axios-cookiejar-support": "1.0.0",
     "tough-cookie": "4.0.0"
